@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ultimate 403 Fix - All Solutions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .step { background: #e9ecef; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff; }
+        .critical { background: #f8d7da; padding: 15px; margin: 15px 0; border-left: 4px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>🚨 Ultimate 403 Forbidden Fix - All Solutions</h1>
+    
+    <div class="critical">
+        <h3>❌ CRITICAL ISSUE:</h3>
+        <p><strong>403 Forbidden</strong> still occurring on `/api/admin/bookings/`</p>
+        <p>Despite API working on `.php` extension, frontend calls failing</p>
+    </div>
+
+    <div class="check warning">
+        <h3>🔍 Root Cause Analysis:</h3>
+        <ul>
+            <li><strong>.htaccess not working:</strong> Rewrite rules not functioning</li>
+            <li><strong>Server configuration:</strong> LiteSpeed server blocking access</li>
+            <li><strong>File permissions:</strong> Still incorrect despite fixes</li>
+            <li><strong>Multiple .htaccess conflicts:</strong> Still present</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>🛠️ Solution 1: Complete .htaccess Reset</h3>
+        <p><strong>Step 1: Delete ALL .htaccess files</strong></p>
+        <ol>
+            <li>Delete <code>public_html/.htaccess</code></li>
+            <li>Delete <code>public_html/api/.htaccess</code></li>
+            <li>Delete <code>public_html/api/admin/.htaccess</code> (if exists)</li>
+        </ol>
+        
+        <p><strong>Step 2: Create NEW .htaccess files</strong></p>
+        <p><strong>Create <code>public_html/.htaccess</code>:</strong></p>
+        <pre>RewriteEngine On
+
+# Handle Next.js static export
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ /admin/index.html [L]
+
+# Handle static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]</pre>
+
+        <p><strong>Create <code>public_html/api/.htaccess</code>:</strong></p>
+        <pre>RewriteEngine On
+
+# Simple rewrite - no complex rules
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ $1.php [L]
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"</pre>
+    </div>
+
+    <div class="step">
+        <h3>🛠️ Solution 2: Direct PHP Access</h3>
+        <p><strong>Upload test file:</strong></p>
+        <ul>
+            <li><code>backend/final_403_solution.php</code> → <code>public_html/api/admin/final_403_solution.php</code></li>
+        </ul>
+        <p><strong>Test URL:</strong> <code>https://darbhangatravels.com/api/admin/final_403_solution.php</code></p>
+    </div>
+
+    <div class="step">
+        <h3>🛠️ Solution 3: Alternative API Structure</h3>
+        <p><strong>Create new API structure:</strong></p>
+        <ol>
+            <li>Create folder: <code>public_html/api_new/</code></li>
+            <li>Copy all API files to <code>public_html/api_new/</code></li>
+            <li>Test: <code>https://darbhangatravels.com/api_new/admin/bookings.php</code></li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h3>🛠️ Solution 4: Frontend URL Change</h3>
+        <p><strong>Update frontend to use .php extension:</strong></p>
+        <p>Change all API calls from:</p>
+        <pre>/api/admin/bookings/</pre>
+        <p>To:</p>
+        <pre>/api/admin/bookings.php</pre>
+    </div>
+
+    <div class="step">
+        <h3>🧪 Test All Solutions:</h3>
+        <p><strong>Test these URLs after each solution:</strong></p>
+        <ul>
+            <li><code>https://darbhangatravels.com/api/admin/bookings/</code></li>
+            <li><code>https://darbhangatravels.com/api/admin/bookings.php</code></li>
+            <li><code>https://darbhangatravels.com/api/admin/final_403_solution.php</code></li>
+            <li><code>https://darbhangatravels.com/api_new/admin/bookings.php</code></li>
+        </ul>
+    </div>
+
+    <div class="check info">
+        <h3>📋 Complete Fix Steps:</h3>
+        <ol>
+            <li><strong>Delete</strong> all .htaccess files</li>
+            <li><strong>Create</strong> new simple .htaccess files</li>
+            <li><strong>Upload</strong> test file</li>
+            <li><strong>Test</strong> all URLs</li>
+            <li><strong>If still failing:</strong> Use alternative API structure</li>
+        </ol>
+    </div>
+
+    <div class="check success">
+        <h3>🎯 Expected Result:</h3>
+        <p>After complete reset:</p>
+        <ul>
+            <li>✅ No more 403 Forbidden errors</li>
+            <li>✅ All API endpoints working</li>
+            <li>✅ Admin panel loading data</li>
+            <li>✅ Booking save functionality working</li>
+        </ul>
+    </div>
+
+    <div class="critical">
+        <h3>⚠️ Last Resort:</h3>
+        <p>If all solutions fail:</p>
+        <ul>
+            <li>Contact Hostinger support</li>
+            <li>Check server error logs</li>
+            <li>Verify file permissions (644 for files, 755 for folders)</li>
+            <li>Check if mod_rewrite is enabled</li>
+        </ul>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

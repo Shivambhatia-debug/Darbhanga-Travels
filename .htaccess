@@ -1,0 +1,39 @@
+RewriteEngine On
+
+# IMPORTANT: Allow API requests to bypass ALL rewrites - must be first
+RewriteCond %{REQUEST_URI} ^/api/ [NC]
+RewriteRule ^ - [L]
+
+# Handle Next.js static export routes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ /admin/index.html [L]
+
+# SPA fallback - but NOT for API routes (already handled above)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/api/ [NC]
+RewriteRule ^(.*)$ /index.html [L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Allow CORS on static assets
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+
+
+
+
+
+
+
+
+
+
+
+

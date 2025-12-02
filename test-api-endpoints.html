@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Endpoints Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>API Endpoints Test</h1>
+    <p>Use this page to test if API endpoints are accessible after uploading files.</p>
+    
+    <div class="test">
+        <h3>Test Dashboard API</h3>
+        <button onclick="testDashboard()">Test /api/admin/dashboard.php</button>
+        <div id="dashboard-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test Bookings API</h3>
+        <button onclick="testBookings()">Test /api/admin/bookings.php</button>
+        <div id="bookings-result"></div>
+    </div>
+    
+    <script>
+        async function testDashboard() {
+            const resultDiv = document.getElementById('dashboard-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/admin/dashboard.php');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ SUCCESS: Dashboard API is working!<br>Response: ${JSON.stringify(data, null, 2)}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ ERROR: ${response.status} - ${data.message || 'Unknown error'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ ERROR: ${error.message}<br>Make sure dashboard.php is uploaded to public_html/api/admin/</div>`;
+            }
+        }
+        
+        async function testBookings() {
+            const resultDiv = document.getElementById('bookings-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/admin/bookings.php');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ SUCCESS: Bookings API is working!<br>Found ${data.data?.length || 0} bookings</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ ERROR: ${response.status} - ${data.message || 'Unknown error'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ ERROR: ${error.message}<br>Make sure bookings.php is uploaded to public_html/api/admin/</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

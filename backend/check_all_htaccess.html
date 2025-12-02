@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check All .htaccess Files</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .step { background: #e9ecef; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Check All .htaccess Files - Complete Analysis</h1>
+    
+    <div class="check warning">
+        <h3>⚠️ Multiple .htaccess Files Can Cause Conflicts:</h3>
+        <p>Hostinger mein multiple .htaccess files hain jo conflict kar sakti hain:</p>
+        <ul>
+            <li><code>public_html/.htaccess</code> (Main website .htaccess)</li>
+            <li><code>public_html/api/.htaccess</code> (API .htaccess)</li>
+            <li><code>public_html/api/admin/.htaccess</code> (Admin .htaccess)</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>📋 Step 1: Check All .htaccess Files</h3>
+        <p><strong>Go to Hostinger File Manager and check:</strong></p>
+        <ol>
+            <li><strong>public_html/.htaccess</strong> - Main website .htaccess</li>
+            <li><strong>public_html/api/.htaccess</strong> - API .htaccess</li>
+            <li><strong>public_html/api/admin/.htaccess</strong> - Admin .htaccess (if exists)</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h3>🛠️ Step 2: Fix .htaccess Conflicts</h3>
+        <p><strong>Solution:</strong></p>
+        <ol>
+            <li><strong>DELETE</strong> <code>public_html/api/admin/.htaccess</code> (if exists)</li>
+            <li><strong>UPDATE</strong> <code>public_html/api/.htaccess</code> with correct rules</li>
+            <li><strong>CHECK</strong> <code>public_html/.htaccess</code> for conflicting rules</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h3>📝 Step 3: Correct .htaccess Configuration</h3>
+        <p><strong>public_html/api/.htaccess should contain:</strong></p>
+        <pre>RewriteEngine On
+
+# Handle trailing slash first
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ $1.php [NC,L]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Allow all files
+&lt;Files "*"&gt;
+    Order allow,deny
+    Allow from all
+&lt;/Files&gt;</pre>
+    </div>
+
+    <div class="step">
+        <h3>🔧 Step 4: Check Main .htaccess</h3>
+        <p><strong>public_html/.htaccess should NOT contain:</strong></p>
+        <ul>
+            <li>API-specific rewrite rules</li>
+            <li>Conflicting CORS headers</li>
+            <li>Restrictive file access rules</li>
+        </ul>
+        <p><strong>If main .htaccess has API rules, remove them</strong></p>
+    </div>
+
+    <div class="check info">
+        <h3>📋 Complete Fix Steps:</h3>
+        <ol>
+            <li>Check all .htaccess files in Hostinger</li>
+            <li>Delete <code>public_html/api/admin/.htaccess</code></li>
+            <li>Update <code>public_html/api/.htaccess</code></li>
+            <li>Check <code>public_html/.htaccess</code> for conflicts</li>
+            <li>Test API endpoints</li>
+        </ol>
+    </div>
+
+    <div class="check success">
+        <h3>🎯 Expected Result:</h3>
+        <p>After fixing .htaccess conflicts:</p>
+        <ul>
+            <li>✅ No more 403 Forbidden errors</li>
+            <li>✅ API endpoints working</li>
+            <li>✅ Admin panel loading data</li>
+        </ul>
+    </div>
+
+    <div class="check warning">
+        <h3>⚠️ Important Notes:</h3>
+        <ul>
+            <li>Multiple .htaccess files can override each other</li>
+            <li>Main .htaccess should not interfere with API</li>
+            <li>Admin .htaccess is not needed if API .htaccess is correct</li>
+        </ul>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

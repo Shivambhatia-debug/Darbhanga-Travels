@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Booking API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; background: #f0f0f0; white-space: pre-wrap; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Test Booking API</h1>
+    
+    <button onclick="testAPI()">Test Booking Creation</button>
+    <button onclick="testPHPDirect()">Test PHP Backend Direct</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.textContent = 'Testing...';
+            result.className = '';
+            
+            try {
+                const token = localStorage.getItem('admin_token');
+                
+                const testData = {
+                    customer_name: "Test Customer",
+                    customer_phone: "9999999999",
+                    customer_email: "test@test.com",
+                    customer_address: "Test Address",
+                    service: "train",
+                    from: "Delhi",
+                    to: "Mumbai",
+                    date: "2024-12-15",
+                    booking_date: "2024-11-08",
+                    passengers: 1,
+                    amount: 1000,
+                    total_amount: 1000,
+                    paid_amount: 500,
+                    pending_amount: 500,
+                    status: "new_booking",
+                    payment_status: "partial",
+                    notes: "Test booking",
+                    train_number: "12301",
+                    train_name: "Rajdhani",
+                    class: "3A",
+                    departure_time: "10:00",
+                    arrival_time: "18:00",
+                    duration: "8h",
+                    fare_per_person: 1000,
+                    passenger_details: [
+                        { name: "Test Passenger", age: 30, gender: "male" }
+                    ]
+                };
+                
+                console.log('Sending data:', testData);
+                
+                const response = await fetch('/api/admin/bookings.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                result.textContent = JSON.stringify(data, null, 2);
+                result.className = response.ok ? 'success' : 'error';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                result.textContent = 'Error: ' + error.message;
+                result.className = 'error';
+            }
+        }
+        
+        async function testPHPDirect() {
+            const result = document.getElementById('result');
+            result.textContent = 'Testing PHP backend directly...';
+            result.className = '';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/bookings.php', {
+                    method: 'GET'
+                });
+                
+                const data = await response.json();
+                
+                result.textContent = 'PHP Backend Response:\n' + JSON.stringify(data, null, 2);
+                result.className = response.ok ? 'success' : 'error';
+                
+            } catch (error) {
+                result.textContent = 'PHP Backend Error: ' + error.message;
+                result.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>403 Error Complete Fix Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .test-btn { 
+            background: #007bff; color: white; padding: 10px 20px; 
+            border: none; border-radius: 5px; cursor: pointer; margin: 5px;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .step { background: #e9ecef; padding: 10px; margin: 10px 0; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>🚨 403 Forbidden Error - Complete Fix Guide</h1>
+    
+    <div class="check error">
+        <h3>❌ Current Problem:</h3>
+        <p><strong>403 Forbidden Error</strong> on `/api/admin/bookings/` endpoint</p>
+        <p>Console shows: <code>Failed to load resource: the server responded with a status of 403</code></p>
+    </div>
+
+    <div class="check warning">
+        <h3>🔍 Root Cause Analysis:</h3>
+        <ul>
+            <li><strong>File Permissions:</strong> Most likely cause - incorrect permissions on files/folders</li>
+            <li><strong>File Location:</strong> Files might be in wrong directory structure</li>
+            <li><strong>.htaccess Issues:</strong> Conflicting or restrictive .htaccess rules</li>
+            <li><strong>Server Configuration:</strong> Hostinger server blocking access</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>📋 Step 1: Upload Debug Files</h3>
+        <p>Upload these files to test access:</p>
+        <ul>
+            <li><code>backend/debug_403_error.php</code> → <code>public_html/api/debug_403_error.php</code></li>
+            <li><code>backend/api/admin/debug_admin.php</code> → <code>public_html/api/admin/debug_admin.php</code></li>
+        </ul>
+        <p>Then test these URLs:</p>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/debug_403_error')">Test API Debug</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/debug_admin')">Test Admin Debug</button>
+        <div id="debug-results"></div>
+    </div>
+
+    <div class="step">
+        <h3>🔧 Step 2: Fix File Permissions</h3>
+        <p><strong>In Hostinger File Manager:</strong></p>
+        <ol>
+            <li>Navigate to <code>public_html/api/</code></li>
+            <li>Right-click on <code>admin</code> folder → <strong>Permissions</strong></li>
+            <li>Set permissions to <strong>0755</strong> (rwxr-xr-x)</li>
+            <li>Navigate inside <code>public_html/api/admin/</code></li>
+            <li>Right-click on each PHP file → <strong>Permissions</strong></li>
+            <li>Set permissions to <strong>0644</strong> (rw-r--r--)</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h3>📁 Step 3: Verify File Structure</h3>
+        <p><strong>Correct structure should be:</strong></p>
+        <pre>public_html/
+├── api/
+│   ├── .htaccess
+│   ├── test.php
+│   ├── bookings.php
+│   ├── debug_403_error.php
+│   └── admin/
+│       ├── login.php
+│       ├── verify.php
+│       ├── dashboard.php
+│       ├── bookings.php
+│       ├── customers.php
+│       ├── settings.php
+│       └── debug_admin.php</pre>
+    </div>
+
+    <div class="step">
+        <h3>⚙️ Step 4: Check .htaccess Configuration</h3>
+        <p><strong>Create/Update <code>public_html/api/.htaccess</code>:</strong></p>
+        <pre>RewriteEngine On
+
+# Remove .php extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Allow PHP execution
+AddType application/x-httpd-php .php
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS requests for CORS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Allow all file types in API directory
+&lt;Files "*"&gt;
+    Order allow,deny
+    Allow from all
+&lt;/Files&gt;</pre>
+    </div>
+
+    <div class="step">
+        <h3>🧪 Step 5: Test All Endpoints</h3>
+        <p>After fixing permissions and structure, test these URLs:</p>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/test')">Test Basic API</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings')">Test Admin Bookings</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/login')">Test Admin Login</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/bookings')">Test Public Bookings</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="check info">
+        <h3>📋 Quick Checklist:</h3>
+        <ul>
+            <li>✅ Upload debug files</li>
+            <li>✅ Set folder permissions to 0755</li>
+            <li>✅ Set file permissions to 0644</li>
+            <li>✅ Verify file structure</li>
+            <li>✅ Check .htaccess configuration</li>
+            <li>✅ Test all endpoints</li>
+        </ul>
+    </div>
+
+    <div class="check success">
+        <h3>🎯 Expected Result:</h3>
+        <p>After following all steps:</p>
+        <ul>
+            <li>✅ No more 403 Forbidden errors</li>
+            <li>✅ All API endpoints working</li>
+            <li>✅ Admin panel loading data</li>
+            <li>✅ Booking save functionality working</li>
+        </ul>
+    </div>
+
+    <script>
+        async function testAPI(url) {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<p>Testing ' + url + '...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.text();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = '<div style="color: green;">✅ ' + url + ' - Working!</div>';
+                } else {
+                    resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Error: ' + response.status + ' ' + response.statusText + '</div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Network Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

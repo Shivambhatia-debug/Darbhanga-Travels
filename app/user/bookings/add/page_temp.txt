@@ -1,0 +1,613 @@
+﻿            {/* Customer Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Customer Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">Full Name *</Label>
+                    <Input
+                      id="customerName"
+                      value={formData.customerName}
+                      onChange={(e) => handleInputChange("customerName", e.target.value)}
+                      placeholder="Enter customer full name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customerPhone">Phone Number *</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="customerPhone"
+                        value={formData.customerPhone}
+                        onChange={(e) => handleInputChange("customerPhone", e.target.value)}
+                        placeholder="Enter phone number"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customerEmail">Email Address</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="customerEmail"
+                      type="email"
+                      value={formData.customerEmail}
+                      onChange={(e) => handleInputChange("customerEmail", e.target.value)}
+                      placeholder="Enter email address"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customerAddress">Address</Label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Textarea
+                      id="customerAddress"
+                      value={formData.customerAddress}
+                      onChange={(e) => handleInputChange("customerAddress", e.target.value)}
+                      placeholder="Enter customer address"
+                      className="pl-10 min-h-[100px]"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Booking Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  Booking Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="service">Service Type *</Label>
+                    <Select value={formData.service} onValueChange={(value) => handleInputChange("service", value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select service type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="train">ðŸš‚ Train</SelectItem>
+                        <SelectItem value="bus">ðŸšŒ Bus</SelectItem>
+                        <SelectItem value="flight">âœˆï¸ Flight</SelectItem>
+                        <SelectItem value="cab">ðŸš— Cab</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="passengers">Number of Passengers *</Label>
+                    <Select value={formData.passengers} onValueChange={(value) => handleInputChange("passengers", value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select passengers" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[1,2,3,4,5,6,7,8,9,10].map(num => (
+                          <SelectItem key={num} value={num.toString()}>
+                            {num} Passenger{num > 1 ? 's' : ''}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="fromLocation">From Location *</Label>
+                    <div className="relative" ref={fromInputRef}>
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="fromLocation"
+                        value={formData.fromLocation}
+                        onChange={(e) => {
+                          handleInputChange("fromLocation", e.target.value)
+                          handleStationSearch(e.target.value, 'from')
+                        }}
+                        placeholder={formData.service === 'train' ? "Enter departure station (e.g., New Delhi)" : "Enter departure location"}
+                        className="pl-10"
+                        required
+                      />
+                      {fromSuggestions.length > 0 && formData.service === 'train' && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                          {fromSuggestions.map((station) => (
+                            <div
+                              key={station.code}
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                              onClick={() => handleStationSelect(station, 'from')}
+                            >
+                              {station.name} ({station.code})
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="toLocation">To Location *</Label>
+                    <div className="relative" ref={toInputRef}>
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="toLocation"
+                        value={formData.toLocation}
+                        onChange={(e) => {
+                          handleInputChange("toLocation", e.target.value)
+                          handleStationSearch(e.target.value, 'to')
+                        }}
+                        placeholder={formData.service === 'train' ? "Enter destination station (e.g., Mumbai Central)" : "Enter destination location"}
+                        className="pl-10"
+                        required
+                      />
+                      {toSuggestions.length > 0 && formData.service === 'train' && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                          {toSuggestions.map((station) => (
+                            <div
+                              key={station.code}
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                              onClick={() => handleStationSelect(station, 'to')}
+                            >
+                              {station.name} ({station.code})
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label>Travel Date *</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !travelDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {travelDate ? format(travelDate, "PPP") : "Select travel date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={travelDate}
+                          onSelect={setTravelDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Booking Date *</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !bookingDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {bookingDate ? format(bookingDate, "PPP") : "Select booking date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={bookingDate}
+                          onSelect={setBookingDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="totalAmount">Total Amount (â‚¹) *</Label>
+                    <Input
+                      id="totalAmount"
+                      type="number"
+                      value={formData.totalAmount}
+                      onChange={(e) => handleInputChange("totalAmount", e.target.value)}
+                      placeholder="Enter total booking amount"
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="paidAmount">Paid Amount (â‚¹)</Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const totalAmount = parseFloat(formData.totalAmount) || 0
+                          setFormData(prev => ({
+                            ...prev,
+                            paidAmount: "0",
+                            pendingAmount: totalAmount.toString(),
+                            paymentStatus: "pending"
+                          }))
+                        }}
+                        className="text-xs"
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                    <Input
+                      id="paidAmount"
+                      type="number"
+                      value={formData.paidAmount}
+                      onChange={(e) => handleInputChange("paidAmount", e.target.value)}
+                      placeholder="Enter advance payment"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pendingAmount">Pending Amount (â‚¹)</Label>
+                    <Input
+                      id="pendingAmount"
+                      type="number"
+                      value={formData.pendingAmount}
+                      placeholder="Auto calculated"
+                      disabled
+                      className="bg-gray-100"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Booking Status</Label>
+                    <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new_booking">ðŸ†• New Booking</SelectItem>
+                        <SelectItem value="ticket_booked">ðŸŽ« Ticket Booked</SelectItem>
+                        <SelectItem value="not_booked">âŒ Not Booked</SelectItem>
+                        <SelectItem value="cancelled">ðŸš« Cancelled</SelectItem>
+                        <SelectItem value="refund_amount">ðŸ’° Refund Amount</SelectItem>
+                        <SelectItem value="pending_booking">â³ Pending Booking</SelectItem>
+                        <SelectItem value="ticket_delivery_paid_amount">âœ… Ticket Delivery Paid Amount</SelectItem>
+                        <SelectItem value="ticket_delivery_duse_amount">ðŸ“¦ Ticket Delivery Duse Amount</SelectItem>
+                        <SelectItem value="pending_amount_by_customer">ðŸ’³ Pending Amount By Customer</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="paymentStatus">Payment Status</Label>
+                    <Select value={formData.paymentStatus} onValueChange={(value) => handleInputChange("paymentStatus", value)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">â³ Pending</SelectItem>
+                        <SelectItem value="partial">ðŸ’° Partial</SelectItem>
+                        <SelectItem value="paid">âœ… Paid</SelectItem>
+                        <SelectItem value="refunded">ðŸ”„ Refunded</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => handleInputChange("notes", e.target.value)}
+                    placeholder="Enter any additional notes"
+                    className="min-h-[100px]"
+                  />
+                </div>
+
+                {/* PDF Upload - Show when status is ticket_booked or confirmed */}
+                {(formData.status === 'ticket_booked' || formData.status === 'confirmed') && (
+                  <div className="space-y-2">
+                    <Label htmlFor="ticketPdf">Ticket PDF *</Label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      {formData.ticketPdf ? (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <FileText className="h-8 w-8 text-blue-600" />
+                            <div>
+                              <p className="font-medium text-gray-900">{formData.ticketPdf.name}</p>
+                              <p className="text-sm text-gray-500">
+                                {(formData.ticketPdf.size / 1024).toFixed(2)} KB
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setFormData(prev => ({ ...prev, ticketPdf: null, ticketPdfUrl: '' }))
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <Upload className="h-10 w-10 text-gray-400 mx-auto mb-3" />
+                          <Label htmlFor="ticketPdf" className="cursor-pointer">
+                            <span className="text-blue-600 hover:text-blue-700 font-medium">
+                              Click to upload ticket PDF
+                            </span>
+                            <span className="text-gray-500 text-sm block mt-1">
+                              PDF files only (Max 5MB)
+                            </span>
+                          </Label>
+                          <Input
+                            id="ticketPdf"
+                            type="file"
+                            accept=".pdf"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) {
+                                if (file.size > 5 * 1024 * 1024) {
+                                  toast({
+                                    title: "File too large",
+                                    description: "File size must be less than 5MB",
+                                    variant: "destructive"
+                                  })
+                                  return
+                                }
+                                if (file.type !== 'application/pdf') {
+                                  toast({
+                                    title: "Invalid file type",
+                                    description: "Please upload a PDF file",
+                                    variant: "destructive"
+                                  })
+                                  return
+                                }
+                                setFormData(prev => ({ ...prev, ticketPdf: file }))
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Train Details - Only show when service is train */}
+            {formData.service === 'train' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Train className="h-5 w-5" />
+                    Train Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="trainNumber">Train Number</Label>
+                      <Input
+                        id="trainNumber"
+                        value={formData.trainNumber}
+                        onChange={(e) => handleInputChange("trainNumber", e.target.value)}
+                        placeholder="e.g., 12301"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="trainName">Train Name</Label>
+                      <Input
+                        id="trainName"
+                        value={formData.trainName}
+                        onChange={(e) => handleInputChange("trainName", e.target.value)}
+                        placeholder="e.g., Rajdhani Express"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="trainClass">Class</Label>
+                      <Select value={formData.trainClass} onValueChange={(value) => handleInputChange("trainClass", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select class" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1A">1A - First AC</SelectItem>
+                          <SelectItem value="2A">2A - Second AC</SelectItem>
+                          <SelectItem value="3A">3A - Third AC</SelectItem>
+                          <SelectItem value="SL">SL - Sleeper</SelectItem>
+                          <SelectItem value="CC">CC - Chair Car</SelectItem>
+                          <SelectItem value="2S">2S - Second Sitting</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="farePerPerson">Fare Per Person (â‚¹)</Label>
+                      <Input
+                        id="farePerPerson"
+                        type="number"
+                        value={formData.farePerPerson}
+                        onChange={(e) => handleInputChange("farePerPerson", e.target.value)}
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="departureTime">Departure Time</Label>
+                      <Input
+                        id="departureTime"
+                        value={formData.departureTime}
+                        onChange={(e) => handleInputChange("departureTime", e.target.value)}
+                        placeholder="HH:MM"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="arrivalTime">Arrival Time</Label>
+                      <Input
+                        id="arrivalTime"
+                        value={formData.arrivalTime}
+                        onChange={(e) => handleInputChange("arrivalTime", e.target.value)}
+                        placeholder="HH:MM"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="duration">Duration</Label>
+                      <Input
+                        id="duration"
+                        value={formData.duration}
+                        onChange={(e) => handleInputChange("duration", e.target.value)}
+                        placeholder="e.g., 2h 30m"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Passenger Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Passenger Details
+                  </div>
+                  <Button type="button" onClick={addPassenger} size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Passenger
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {formData.passengerDetails.map((passenger, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="p-4 border rounded-lg bg-gray-50"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-semibold">Passenger {index + 1}</h4>
+                      {formData.passengerDetails.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removePassenger(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor={`passenger-${index}-name`}>Name *</Label>
+                        <Input
+                          id={`passenger-${index}-name`}
+                          value={passenger.name}
+                          onChange={(e) => handlePassengerChange(index, "name", e.target.value)}
+                          placeholder="Enter passenger name"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`passenger-${index}-age`}>Age *</Label>
+                        <Input
+                          id={`passenger-${index}-age`}
+                          type="number"
+                          value={passenger.age}
+                          onChange={(e) => handlePassengerChange(index, "age", e.target.value)}
+                          placeholder="Enter age"
+                          min="1"
+                          max="120"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`passenger-${index}-gender`}>Gender *</Label>
+                        <Select
+                          value={passenger.gender}
+                          onValueChange={(value) => handlePassengerChange(index, "gender", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Submit Button */}
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="min-w-[150px]"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Booking
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Index.html</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Index.html Checker</h1>
+    
+    <div class="check warning">
+        <h3>⚠️ Important Steps:</h3>
+        <ol>
+            <li>Upload the updated <code>dist/index.html</code> to <code>public_html/</code> on Hostinger</li>
+            <li>Make sure it replaces the existing <code>index.html</code> file</li>
+            <li>Clear your browser cache</li>
+            <li>Test the admin login again</li>
+        </ol>
+    </div>
+
+    <div class="check success">
+        <h3>✅ What should be in your index.html:</h3>
+        <p>The first few lines should look like this:</p>
+        <pre>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;script&gt;
+// Fix API calls for static export
+const originalFetch = window.fetch;
+window.fetch = function(url, options) {
+  if (url.startsWith('/api/')) {
+    url = 'https://darbhangatravels.com' + url;
+  }
+  return originalFetch(url, options);
+};
+&lt;/script&gt;&lt;meta charSet="utf-8"/&gt;</pre>
+    </div>
+
+    <div class="check error">
+        <h3>❌ If the script is missing:</h3>
+        <p>The API calls will fail with 404 errors because the frontend is trying to call relative URLs instead of absolute URLs.</p>
+    </div>
+
+    <div class="check warning">
+        <h3>🧪 Test URLs:</h3>
+        <ul>
+            <li><a href="https://darbhangatravels.com/test_connection.php" target="_blank">Test Connection</a></li>
+            <li><a href="https://darbhangatravels.com/api/admin/login.php" target="_blank">Test Login API</a></li>
+            <li><a href="https://darbhangatravels.com/admin/" target="_blank">Admin Login Page</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Test if the API fix script is working
+        console.log('Testing API fix script...');
+        
+        // Check if fetch is overridden
+        const testUrl = '/api/test';
+        const originalFetch = window.fetch;
+        
+        if (originalFetch.toString().includes('darbhangatravels.com')) {
+            document.body.innerHTML += '<div class="check success"><h3>✅ API Fix Script is Working!</h3><p>The fetch function has been overridden correctly.</p></div>';
+        } else {
+            document.body.innerHTML += '<div class="check error"><h3>❌ API Fix Script is NOT Working!</h3><p>The fetch function has not been overridden. Make sure the script is in your index.html file.</p></div>';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

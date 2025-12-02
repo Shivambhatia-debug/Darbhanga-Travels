@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete .htaccess Setup Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .step { background: #e9ecef; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff; }
+        .copy-btn { 
+            background: #28a745; color: white; padding: 5px 10px; 
+            border: none; border-radius: 3px; cursor: pointer; margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📁 Complete .htaccess Setup Guide</h1>
+    
+    <div class="check warning">
+        <h3>⚠️ Multiple .htaccess Files Setup:</h3>
+        <p>Hostinger mein 2 .htaccess files hongi:</p>
+        <ul>
+            <li><code>public_html/.htaccess</code> - Main website .htaccess</li>
+            <li><code>public_html/api/.htaccess</code> - API .htaccess</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>📝 Step 1: Main Website .htaccess</h3>
+        <p><strong>Create/Update <code>public_html/.htaccess</code>:</strong></p>
+        <pre id="main-htaccess">RewriteEngine On
+
+# Handle Next.js static export
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ /admin/index.html [L]
+
+# Handle API routes - DO NOT interfere with API
+# API routes are handled by public_html/api/.htaccess
+
+# Handle static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# CORS for static files only (not API)
+&lt;FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg)$"&gt;
+    Header set Access-Control-Allow-Origin "*"
+&lt;/FilesMatch&gt;</pre>
+        <button class="copy-btn" onclick="copyToClipboard('main-htaccess')">Copy Main .htaccess</button>
+    </div>
+
+    <div class="step">
+        <h3>📝 Step 2: API .htaccess</h3>
+        <p><strong>Create/Update <code>public_html/api/.htaccess</code>:</strong></p>
+        <pre id="api-htaccess">RewriteEngine On
+
+# Handle trailing slash first
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ $1.php [NC,L]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Allow all files
+&lt;Files "*"&gt;
+    Order allow,deny
+    Allow from all
+&lt;/Files&gt;</pre>
+        <button class="copy-btn" onclick="copyToClipboard('api-htaccess')">Copy API .htaccess</button>
+    </div>
+
+    <div class="step">
+        <h3>🗑️ Step 3: Delete Conflicting Files</h3>
+        <p><strong>Delete these files if they exist:</strong></p>
+        <ul>
+            <li><code>public_html/api/admin/.htaccess</code> - DELETE this file</li>
+        </ul>
+        <p><strong>Reason:</strong> Multiple .htaccess files in nested folders cause conflicts</p>
+    </div>
+
+    <div class="step">
+        <h3>📋 Step 4: Upload Process</h3>
+        <ol>
+            <li>Go to Hostinger File Manager</li>
+            <li>Navigate to <code>public_html/</code></li>
+            <li>Create/Edit <code>.htaccess</code> file</li>
+            <li>Paste the main .htaccess content</li>
+            <li>Navigate to <code>public_html/api/</code></li>
+            <li>Create/Edit <code>.htaccess</code> file</li>
+            <li>Paste the API .htaccess content</li>
+            <li>Delete <code>public_html/api/admin/.htaccess</code> if exists</li>
+        </ol>
+    </div>
+
+    <div class="check info">
+        <h3>🔧 What Each .htaccess Does:</h3>
+        <ul>
+            <li><strong>Main .htaccess:</strong> Handles website routing, admin panel, static files</li>
+            <li><strong>API .htaccess:</strong> Handles API endpoints, CORS, PHP file access</li>
+            <li><strong>No Admin .htaccess:</strong> Prevents conflicts with API .htaccess</li>
+        </ul>
+    </div>
+
+    <div class="check success">
+        <h3>🎯 Expected Result:</h3>
+        <p>After setting up both .htaccess files:</p>
+        <ul>
+            <li>✅ Website loads correctly</li>
+            <li>✅ Admin panel accessible</li>
+            <li>✅ API endpoints working (no 403 errors)</li>
+            <li>✅ Booking save functionality working</li>
+        </ul>
+    </div>
+
+    <div class="check warning">
+        <h3>⚠️ Important Notes:</h3>
+        <ul>
+            <li>Main .htaccess should NOT interfere with API routes</li>
+            <li>API .htaccess handles all API-related routing</li>
+            <li>Delete any nested .htaccess files in API folders</li>
+        </ul>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,56 @@
+# ===========================================
+# IndianRailAPI Configuration
+# ===========================================
+
+Copy this to your .env.local file:
+
+NEXT_PUBLIC_INDIAN_RAIL_API_KEY=
+
+# ===========================================
+# How to Get FREE API Key
+# ===========================================
+
+Step 1: Visit http://indianrailapi.com
+Step 2: Sign up / Register
+Step 3: Get your API key from dashboard
+Step 4: Paste it above like this:
+
+NEXT_PUBLIC_INDIAN_RAIL_API_KEY=your_api_key_here
+
+# Example:
+# NEXT_PUBLIC_INDIAN_RAIL_API_KEY=abc123xyz456
+
+# ===========================================
+# Restart App After Adding Key
+# ===========================================
+
+pnpm run dev
+# OR
+pnpm run build
+
+# ===========================================
+# Verification
+# ===========================================
+
+Check browser console (F12):
+✅ With API: "Real-time data fetched from IndianRailAPI"
+📊 Without API: "Using local train database"
+
+Both work perfectly!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

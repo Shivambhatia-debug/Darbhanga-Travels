@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Files Checker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .test-btn { 
+            background: #007bff; color: white; padding: 10px 20px; 
+            border: none; border-radius: 5px; cursor: pointer; margin: 5px;
+        }
+        .test-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🔍 API Files Checker - 403 Error Fix</h1>
+    
+    <div class="check error">
+        <h3>❌ Current Problem:</h3>
+        <p><strong>403 Forbidden Error</strong> on API endpoints</p>
+        <p>Console shows: <code>GET https://darbhangatravels.com/api/admin/bookings/ 403 (Forbidden)</code></p>
+    </div>
+
+    <div class="check warning">
+        <h3>⚠️ Required Files to Upload:</h3>
+        <p>Upload these files to <code>public_html/api/</code> folder:</p>
+        <ul>
+            <li><code>admin/login.php</code></li>
+            <li><code>admin/verify.php</code></li>
+            <li><code>admin/dashboard.php</code></li>
+            <li><code>admin/bookings.php</code></li>
+            <li><code>admin/customers.php</code></li>
+            <li><code>admin/settings.php</code></li>
+            <li><code>bookings.php</code></li>
+        </ul>
+    </div>
+
+    <div class="check info">
+        <h3>📁 File Structure on Hostinger:</h3>
+        <pre>public_html/
+├── api/
+│   ├── admin/
+│   │   ├── login.php
+│   │   ├── verify.php
+│   │   ├── dashboard.php
+│   │   ├── bookings.php
+│   │   ├── customers.php
+│   │   └── settings.php
+│   └── bookings.php
+├── admin/
+│   └── index.html
+└── index.html</pre>
+    </div>
+
+    <div class="check warning">
+        <h3>🔧 .htaccess Configuration:</h3>
+        <p>Create/update <code>public_html/api/.htaccess</code> file:</p>
+        <pre>RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ $1.php [L,QSA]
+
+# Allow PHP execution
+AddType application/x-httpd-php .php
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]</pre>
+    </div>
+
+    <div class="check success">
+        <h3>✅ Test API Endpoints:</h3>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/login')">Test Login API</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings')">Test Bookings API</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/bookings')">Test Public Bookings API</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="check info">
+        <h3>📋 Upload Steps:</h3>
+        <ol>
+            <li>Go to Hostinger File Manager</li>
+            <li>Navigate to <code>public_html/api/</code></li>
+            <li>Create <code>admin</code> folder if not exists</li>
+            <li>Upload all PHP files to correct locations</li>
+            <li>Create/update <code>.htaccess</code> file</li>
+            <li>Test the endpoints</li>
+        </ol>
+    </div>
+
+    <script>
+        async function testAPI(url) {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<p>Testing ' + url + '...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.text();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = '<div style="color: green;">✅ ' + url + ' - Working!</div>';
+                } else {
+                    resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Error: ' + response.status + ' ' + response.statusText + '</div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Network Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete 403 Fix - All Solutions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .test-btn { 
+            background: #007bff; color: white; padding: 10px 20px; 
+            border: none; border-radius: 5px; cursor: pointer; margin: 5px;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .step { background: #e9ecef; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff; }
+        .solution { background: #f8f9fa; padding: 15px; margin: 15px 0; border: 1px solid #dee2e6; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🚨 Complete 403 Forbidden Fix - All Solutions</h1>
+    
+    <div class="check error">
+        <h3>❌ Current Status:</h3>
+        <p><strong>403 Forbidden</strong> still occurring on `/api/admin/bookings/`</p>
+        <p>Debug files work, but main endpoint doesn't</p>
+    </div>
+
+    <div class="check warning">
+        <h3>🔍 Root Cause Analysis:</h3>
+        <ul>
+            <li><strong>.htaccess Conflict:</strong> Multiple .htaccess files causing conflicts</li>
+            <li><strong>URL Rewrite Issue:</strong> Trailing slash handling problem</li>
+            <li><strong>Server Configuration:</strong> LiteSpeed server specific issues</li>
+            <li><strong>File Naming:</strong> Case sensitivity or special characters</li>
+        </ul>
+    </div>
+
+    <div class="solution">
+        <h3>🛠️ Solution 1: Remove .htaccess from admin folder</h3>
+        <p><strong>Steps:</strong></p>
+        <ol>
+            <li>Go to Hostinger File Manager</li>
+            <li>Navigate to <code>public_html/api/admin/</code></li>
+            <li><strong>Delete</strong> the <code>.htaccess</code> file from admin folder</li>
+            <li>Keep only the main <code>public_html/api/.htaccess</code> file</li>
+        </ol>
+        <p><strong>Reason:</strong> Multiple .htaccess files can conflict with each other</p>
+    </div>
+
+    <div class="solution">
+        <h3>🛠️ Solution 2: Upload Direct Access Files</h3>
+        <p><strong>Upload these files:</strong></p>
+        <ul>
+            <li><code>backend/test_direct_access.php</code> → <code>public_html/api/test_direct_access.php</code></li>
+            <li><code>backend/api/admin/bookings_direct.php</code> → <code>public_html/api/admin/bookings_direct.php</code></li>
+        </ul>
+        <p><strong>Test these URLs:</strong></p>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/test_direct_access.php')">Test Direct Access</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings_direct.php')">Test Direct Bookings</button>
+        <div id="direct-results"></div>
+    </div>
+
+    <div class="solution">
+        <h3>🛠️ Solution 3: Update Main .htaccess</h3>
+        <p><strong>Replace <code>public_html/api/.htaccess</code> with:</strong></p>
+        <pre>RewriteEngine On
+
+# Handle trailing slash first
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ $1.php [NC,L]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# CORS headers
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Allow all files
+&lt;Files "*"&gt;
+    Order allow,deny
+    Allow from all
+&lt;/Files&gt;</pre>
+    </div>
+
+    <div class="solution">
+        <h3>🛠️ Solution 4: Test Different URL Patterns</h3>
+        <p><strong>Test these URLs after fixes:</strong></p>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings')">Without Trailing Slash</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings/')">With Trailing Slash</button>
+        <button class="test-btn" onclick="testAPI('https://darbhangatravels.com/api/admin/bookings.php')">With .php Extension</button>
+        <div id="url-results"></div>
+    </div>
+
+    <div class="step">
+        <h3>📋 Complete Fix Steps:</h3>
+        <ol>
+            <li><strong>Delete</strong> <code>public_html/api/admin/.htaccess</code> file</li>
+            <li><strong>Upload</strong> direct access test files</li>
+            <li><strong>Update</strong> main <code>public_html/api/.htaccess</code> file</li>
+            <li><strong>Test</strong> all URL patterns</li>
+            <li><strong>Check</strong> admin panel functionality</li>
+        </ol>
+    </div>
+
+    <div class="check info">
+        <h3>🔧 Alternative Solution:</h3>
+        <p>If .htaccess issues persist, use direct PHP file access:</p>
+        <ul>
+            <li>Change frontend calls from <code>/api/admin/bookings/</code> to <code>/api/admin/bookings.php</code></li>
+            <li>This bypasses all .htaccess rewrite rules</li>
+        </ul>
+    </div>
+
+    <div class="check success">
+        <h3>🎯 Expected Result:</h3>
+        <p>After following all solutions:</p>
+        <ul>
+            <li>✅ No more 403 Forbidden errors</li>
+            <li>✅ All API endpoints accessible</li>
+            <li>✅ Admin panel loading data</li>
+            <li>✅ Booking save functionality working</li>
+        </ul>
+    </div>
+
+    <script>
+        async function testAPI(url) {
+            const resultsDiv = document.getElementById('direct-results') || document.getElementById('url-results');
+            resultsDiv.innerHTML = '<p>Testing ' + url + '...</p>';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.text();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = '<div style="color: green;">✅ ' + url + ' - Working!</div>';
+                } else {
+                    resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Error: ' + response.status + ' ' + response.statusText + '</div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<div style="color: red;">❌ ' + url + ' - Network Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

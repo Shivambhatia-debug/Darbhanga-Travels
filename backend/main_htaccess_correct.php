@@ -1,0 +1,51 @@
+<?php
+// This file contains the correct .htaccess for public_html/
+// Upload this content to public_html/.htaccess
+
+$htaccess_content = 'RewriteEngine On
+
+# Handle Next.js static export
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ /admin/index.html [L]
+
+# Handle API routes - DO NOT interfere with API
+# API routes are handled by public_html/api/.htaccess
+
+# Handle static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# CORS for static files only (not API)
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>';
+
+echo "Copy this content to public_html/.htaccess:\n\n";
+echo $htaccess_content;
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
